@@ -8,7 +8,7 @@ const fs = require('fs'); // require fs to write files
 const generateTeamProfile = require('./lib/generateTeamProfile'); // require fucntion to generate the Team Profile
 
 // Questions upon launching app to insert team manager info
-const homeQuestions = [
+const addManager = [
     {
       type: 'input',
       message: 'What is the team manager first and last name?',
@@ -31,12 +31,30 @@ const homeQuestions = [
     }
 ]
 
+const addEmployee = [
+  {
+    type: 'input',
+    message: 'What is the employee first and last name?',
+    name: 'name',
+  },
+  {
+    type: 'input',
+    message: 'What is their id?',
+    name: 'id',
+  },
+  {
+    type: 'input',
+    message: 'What is their email?',
+    name: 'email',
+  }
+]
+
 // after entering team manager info, user given 3 options
-const additionalQs = [
+const homeQs = [
     {
         type: 'list',
-        choices: ['Add an engineer','Add an intern','Finish building the team'],
-        message: 'What would you like to do next?',
+        choices: ['Add a manager','Add an engineer','Add an intern','Finish building the team'],
+        message: 'What would you like to do?',
         name: 'additionalQs',
     }  
 ]
@@ -89,15 +107,21 @@ const addIntern = [
     }
 ] 
 
+// function addAManager(responses) {
+//   inquirer.prompt(addManager).then((data) => {
+//     engineer = new Manager();
+//   });
+// }
+
 function addAnEngineer(responses) {
-  inquirer.prompt(addEngineer).then((engineerInfo) => {
-    engineer = new Engineer(engineerInfo.name,engineerInfo.id,engineerInfo.email,engineerInfo.github);
+  inquirer.prompt(addEngineer).then((data) => {
+    engineer = new Engineer(data.name,data.id,data.email,data.github);
   });
 };
 
 function addAnIntern(responses) {
-  inquirer.prompt(addIntern).then((internInfo) => {
-    intern = new Intern(internInfo.name,internInfo.id,internInfo.email,internInfo.school);
+  inquirer.prompt(addIntern).then((data) => {
+    intern = new Intern(data.name,data.id,data.email,data.school);
   });
 };
 
@@ -114,13 +138,17 @@ function finishApp(responses) {
 };
 
 function generateTeam () {
-  inquirer.prompt(homeQuestions).then((responses) => {
+  inquirer.prompt(employeeQs).then((responses) => {
+    employee = new Employee(responses.name,)
     teamManager = new Manager(responses.name,responses.id,responses.email,responses.officeNumber)
     .then((nextSteps) => {
       inquirer.prompt(additionalQs).then((nextSteps) => {
         if  (nextSteps === 'Add an engineer') {
           addAnEngineer();
-        } else if (nextSteps === 'Add an intern') {
+        } else if (nextSteps === 'Add a manager') {
+          addAManager();
+        }
+        else if (nextSteps === 'Add an intern') {
           addAnIntern();
         } else if (nextSteps === `Finish building the team`) {
           finishApp();
