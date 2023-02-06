@@ -8,7 +8,7 @@ const fs = require('fs'); // require fs to write files
 const generateTeamProfile = require('./lib/generateTeamProfile'); // require fucntion to generate the Team Profile
 
 // Questions upon launching app to insert team manager info
-const addManager = [
+const homeQs = [
     {
       type: 'input',
       message: 'What is the team manager first and last name?',
@@ -26,35 +26,22 @@ const addManager = [
     },
     {
       type: 'input',
+      message: 'What is their role?',
+      name: 'role',
+    },
+    {
+      type: 'input',
       message: 'What is their office number?',
       name: 'officeNumber',
     }
 ]
 
-const addEmployee = [
-  {
-    type: 'input',
-    message: 'What is the employee first and last name?',
-    name: 'name',
-  },
-  {
-    type: 'input',
-    message: 'What is their id?',
-    name: 'id',
-  },
-  {
-    type: 'input',
-    message: 'What is their email?',
-    name: 'email',
-  }
-]
-
 // after entering team manager info, user given 3 options
-const homeQs = [
+const additionalQs = [
     {
         type: 'list',
-        choices: ['Add a manager','Add an engineer','Add an intern','Finish building the team'],
-        message: 'What would you like to do?',
+        choices: ['Add an engineer','Add an intern','Finish building the team'],
+        message: 'What would you like to do next?',
         name: 'additionalQs',
     }  
 ]
@@ -75,6 +62,11 @@ const addEngineer = [
         type: 'input',
         message: 'What is their email address?',
         name: 'email',
+      },
+      {
+        type: 'input',
+        message: 'What is their role',
+        name: 'role',
       },
       {
         type: 'input',
@@ -101,17 +93,16 @@ const addIntern = [
         name: 'email',
     },
     {
+      type: 'input',
+      message: 'What is their role',
+      name: 'role',
+    },
+    {
         type: 'input',
         message: 'What school does the intern attend?',
         name: 'school',
     }
 ] 
-
-// function addAManager(responses) {
-//   inquirer.prompt(addManager).then((data) => {
-//     engineer = new Manager();
-//   });
-// }
 
 function addAnEngineer(responses) {
   inquirer.prompt(addEngineer).then((data) => {
@@ -138,9 +129,8 @@ function finishApp(responses) {
 };
 
 function generateTeam () {
-  inquirer.prompt(employeeQs).then((responses) => {
-    employee = new Employee(responses.name,)
-    teamManager = new Manager(responses.name,responses.id,responses.email,responses.officeNumber)
+  inquirer.prompt(homeQs).then((response) => {
+    teamManager = new Manager(response.name,response.id,response.email,response.role,response.officeNumber)
     .then((nextSteps) => {
       inquirer.prompt(additionalQs).then((nextSteps) => {
         if  (nextSteps === 'Add an engineer') {
