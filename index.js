@@ -102,13 +102,15 @@ function addAnIntern(responses) {
 };
 
 // Function to write the html file
-function writeToFile(readMe, data) {
-  return fs.writeFileSync(path.join(process.cwd(),readMe),data)
+function writeToFile(html, data) {
+  return fs.writeFileSync((html),data)
 };
 
 // function to close app and generate HTML file, and open HTML file
 function finishApp(responses) {
-  writeToFile('myTeam.html',generateTeamProfile(responses));
+  console.log("Team profile generating...");
+  generateTeamProfile();
+  writeToFile('./dist/myTeam.html',generateTeamProfile(responses));
 };
 
 function generateTeam () {
