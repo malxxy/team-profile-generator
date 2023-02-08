@@ -6,6 +6,7 @@ const Intern = require('./lib/Intern'); // require the Intern class
 const Manager = require('./lib/Manager'); // require the manager class
 const fs = require('fs'); // require fs to write files
 const generateTeamProfile = require('./lib/generateTeamProfile'); // require fucntion to generate the Team Profile
+const teamMembers = [];
 
 // Questions upon launching app to insert team manager info
 const homeQs = [
@@ -104,15 +105,22 @@ const addIntern = [
     }
 ] 
 
-function addAnEngineer(responses) {
+function addAnEngineer() {
+  console.log('We selected add engineer')
   inquirer.prompt(addEngineer).then((data) => {
-    engineer = new Engineer(data.name,data.id,data.email,data.github);
+    const engineer = new Engineer(data.name,data.id,data.email,'Engineer',data.github); // created new engineer using constructor/class format
+    teamMembers.push(engineer);
+    console.log('Team member added');
+    generateTeam();
   });
 };
 
-function addAnIntern(responses) {
+function addAnIntern() {
   inquirer.prompt(addIntern).then((data) => {
-    intern = new Intern(data.name,data.id,data.email,data.school);
+    const intern = new Intern(data.name,data.id,data.email,'Intern',data.school);
+    teamMembers.push(intern);
+    console.log('Intern added');
+    generateTeam();
   });
 };
 
@@ -122,31 +130,34 @@ function writeToFile(html, data) {
 };
 
 // function to close app and generate HTML file, and open HTML file
-function finishApp(responses) {
+function finishApp() {
   console.log("Team profile generating...");
-  generateTeamProfile();
-  writeToFile('./dist/myTeam.html',generateTeamProfile(responses));
+  // generateTeamProfile();
+  writeToFile('./dist/myTeam.html',generateTeamProfile(teamMembers));
 };
 
-function generateTeam () {
+function generateManager () {
   inquirer.prompt(homeQs).then((response) => {
-    teamManager = new Manager(response.name,response.id,response.email,response.role,response.officeNumber)
-    .then((nextSteps) => {
-      inquirer.prompt(additionalQs).then((nextSteps) => {
-        if  (nextSteps === 'Add an engineer') {
-          addAnEngineer();
-        } else if (nextSteps === 'Add a manager') {
-          addAManager();
-        }
-        else if (nextSteps === 'Add an intern') {
-          addAnIntern();
-        } else if (nextSteps === `Finish building the team`) {
-          finishApp();
-        }
-      });
-    });
+    const manager = new Manager(response.name,response.id,response.email,'Manager',response.officeNumber)
+    teamMembers.push(manager);
+    console.log('Manager added');
+    generateTeam();
+  });
+};
+
+function generateTeam() {
+    inquirer.prompt(additionalQs).then(({additionalQs}) => { // destructuring 
+      if  (additionalQs === 'Add an engineer') {
+        addAnEngineer();
+      } else if (additionalQs === 'Add a manager') {
+        addAManager();
+      } else if (additionalQs === 'Add an intern') {
+        addAnIntern();
+      } else if (additionalQs === `Finish building the team`) {
+        finishApp();
+    };
   });
 };
 
 // function to initialize app 
-generateTeam();
+generateManager();
