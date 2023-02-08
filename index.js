@@ -66,7 +66,7 @@ const addEngineer = [
       },
       {
         type: 'input',
-        message: 'What is their role',
+        message: 'What is their role?',
         name: 'role',
       },
       {
@@ -95,7 +95,7 @@ const addIntern = [
     },
     {
       type: 'input',
-      message: 'What is their role',
+      message: 'What is their role?',
       name: 'role',
     },
     {
